@@ -1,0 +1,25 @@
+{
+  "dependencies": {
+    "file-split-merge": "^1.1.1"
+  },
+  "name": "discord_cloud_storage_webapp",
+  "description": "It's same as Discord-Cloud-Storage, but on the web with some new features. May or may not make the website public",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheLowSpecPC/Discord-Cloud-Storage-WebApp.git"
+  },
+  "keywords": [
+    "discord"
+  ],
+  "author": "Alen Roy",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/TheLowSpecPC/Discord-Cloud-Storage-WebApp/issues"
+  },
+  "homepage": "https://github.com/TheLowSpecPC/Discord-Cloud-Storage-WebApp#readme"
+}
