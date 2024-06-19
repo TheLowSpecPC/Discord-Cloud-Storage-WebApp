@@ -2,12 +2,111 @@
 <head>
     <title>Meme Website</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
-<body>
-<script src="{{url_for('static',filename='script.js')}}"></script>
-<h1>A website to gather some memes!</h1>
-<p>Here is your meme! This will refresh in 30 seconds</p>
-<p><img src="{{url_for('static', filename='Screenshot_20220205-164117.jpg')}}"></p>
-<p>Current subreddit: My Balls</p>
+<body class="p-3 mb-2 bg-dark text-light">
+
+    <div class="d-grid gap-3">
+        <div class="p-0">
+            <nav class="navbar navbar-expand-lg navbar-light bg-secondary rounded">
+              <div class="container-fluid">
+                <button type="button" class="btn btn-primary" value="noupload">Upload</button>
+                  <h1>Discord Cloud Storage</h1>
+                <a class="btn btn-primary" href="https://github.com/TheLowSpecPC" role="button">Logout</a>
+              </div>
+            </nav>
+        </div>
+
+        <div class="p-3 contanir-fluid">
+            <h1 class="text-center text-decoration-underline">Files</h1>
+        </div>
+
+        <div class="accordion col-md-6 mx-auto" id="accordionFile" style="width:88%">
+
+        </div>
+
+        <div class="p-3 contanir-fluid">
+            <h1 class="text-center text-decoration-underline">Folder</h1>
+        </div>
+
+        <div class="accordion col-md-6 mx-auto" id="accordionFolder" style="width:88%">
+
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script>
+    const dict = {
+                1:["Test1.py", "10mb", "complete", "file"],
+                2:["Test2.py", "20mb", "complete", "folder"],
+                3:["Test3.py", "30mb", "complete", "file"],
+                4:["Test4.py", "40mb", "complete", "folder"],
+                5:["Test5.py", "50mb", "complete", "file"],
+                6:["Test6.py", "60mb", "complete", "folder"],
+                7:["Test7.py", "70mb", "complete", "file"],
+                8:["Test8.py", "80mb", "complete", "folder"],
+                9:["Test9.py", "90mb", "complete", "file"],
+                10:["Tes10.py", "100mb", "complete", "folder"],
+            };
+    var files = {};
+    var folders = {};
+    var fiFlag = 1;
+    var foFlag = 1;
+
+    for (const [key, value] of Object.entries(dict)){
+        if (value[3] === "file"){
+            files[fiFlag] = value;
+            fiFlag += 1;
+        }
+        else if (value[3] === "folder"){
+            folders[foFlag] = value;
+            foFlag += 1;
+        }
+    }
+
+    var fileWrapper = document.getElementById("accordionFile");
+    var folderWrapper = document.getElementById("accordionFolder");
+
+    var myFileHTML = '';
+    var myFolderHTML = '';
+
+    flag = 1
+    for (const [keyFile, valueFile] of Object.entries(files)) {
+        myFileHTML += '<div class="accordion-item">\n' +
+            '                <h2 class="accordion-header" id="heading'+flag+'">\n' +
+            '                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse'+flag+'" aria-expanded="false" aria-controls="collapse'+flag+'">\n' +
+            '                   '+valueFile[0]+' Size:'+valueFile[1]+'\n' +
+            '                  </button>\n' +
+            '                </h2>\n' +
+            '                <div id="collapse'+flag+'" class="accordion-collapse collapse" aria-labelledby="heading'+flag+'" data-bs-parent="#accordionFile">\n' +
+            '                  <div class="accordion-body text-dark">\n' +
+            '                      <button type="button" class="btn btn-primary" value="'+valueFile[0]+' Download'+'">Download From Discord</button>\n' +
+            '                      <button type="button" class="btn btn-primary" value="'+valueFile[0]+' Delete'+'">Delete From Discord</button>\n' +
+            '                  </div>\n' +
+            '                </div>\n' +
+            '              </div>\n';
+        flag += 1
+    }
+
+    for (const [keyFile, valueFile] of Object.entries(folders)) {
+        myFolderHTML += '<div class="accordion-item">\n' +
+            '                <h2 class="accordion-header" id="heading'+flag+'">\n' +
+            '                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse'+flag+'" aria-expanded="false" aria-controls="collapse'+flag+'">\n' +
+            '                   '+valueFile[0]+' Size:'+valueFile[1]+'\n' +
+            '                  </button>\n' +
+            '                </h2>\n' +
+            '                <div id="collapse'+flag+'" class="accordion-collapse collapse" aria-labelledby="heading'+flag+'" data-bs-parent="#accordionFolder">\n' +
+            '                  <div class="accordion-body text-dark">\n' +
+            '                      <button type="button" class="btn btn-primary" value="noupload">Open Folder</button>\n' +
+            '                      <button type="button" class="btn btn-primary" value="noupload">Delete Folder</button>\n' +
+            '                  </div>\n' +
+            '                </div>\n' +
+            '              </div>\n';
+        flag += 1
+    }
+
+    fileWrapper.innerHTML = myFileHTML;
+    folderWrapper.innerHTML = myFolderHTML;
+</script>
 </body>
 </html>
