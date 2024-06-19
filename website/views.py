@@ -1,10 +1,19 @@
-from  flask import Blueprint, render_template
+from  flask import Blueprint, render_template, jsonify, request
+import os, json
 
-views = Blueprint('views', __name__)
+path_cwd = os.path.dirname(os.path.realpath(__file__))
+path_static = os.path.join(path_cwd, "static")
+path_templates = os.path.join(path_cwd, "templates")
 
-def test(temp):
-    print(temp+"!!!!!!!!!!!!!")
+Views = Blueprint('views', __name__, static_folder=path_static, template_folder=path_templates)
 
-@views.route('/')
+@Views.route('/', methods=['GET','POST'])
 def index():
-    return render_template("meme_index.html"), test("Done")
+    return render_template("main.html")
+
+@Views.route('/fetch')
+def fetch():
+    with open(f'{path_cwd}/sample.json', 'r') as openfile:
+        dataReply = json.load(openfile)
+
+    return jsonify(dataReply)
