@@ -2,34 +2,86 @@
 <head>
     <title>Meme Website</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
-<body class="p-3 mb-2 bg-dark text-light">
+<body class="p-3 mb-2 bg-dark">
 
     <div class="d-grid gap-3">
         <div class="p-0">
             <nav class="navbar navbar-expand-lg navbar-light bg-secondary rounded">
               <div class="container-fluid">
-                <button type="button" class="btn btn-primary" value="noupload">Upload</button>
-                  <h1>Discord Cloud Storage</h1>
-                <a class="btn btn-primary" href="https://github.com/TheLowSpecPC" role="button">Logout</a>
+
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalUpload">
+                  Upload File
+                </button>
+
+                <div class="modal fade text-light" id="ModalUpload" tabindex="-1" role="dialog" aria-labelledby="modal-title-upload" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content bg-secondary">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="modal-title-upload">Select the File</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                          <form action="/upload" id="dropper" class="dropzone dz-clickable bg-dark" method="post" enctype="multipart/form-data">
+                             <div class="d-grid gap-3" id="uploadForm">
+                             </div>
+                          </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <h1 class="text-light">Discord Cloud Storage</h1>
+
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ModalCenter">
+                  Create Folder
+                </button>
+
+                <div class="modal fade text-light" id="ModalCenter" tabindex="-1" role="dialog" aria-labelledby="modal-title" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content bg-secondary">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="modal-title">Folder Name</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true"></span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                          <form action="/folder_menue" method="post" enctype="multipart/form-data">
+                             <div class="d-grid gap-3 text-dark">
+                                <input type="email" class="form-control" name="crefol" aria-describedby="emailHelp" placeholder="Enter Name">
+                                <input type="submit" class="btn btn-primary" value="Create">
+                             </div>
+                          </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </nav>
         </div>
 
-        <div class="p-3 contanir-fluid">
-            <h1 class="text-center text-decoration-underline">Files</h1>
-        </div>
 
-        <div class="accordion col-md-6 mx-auto" id="accordionFile" style="width:88%">
 
-        </div>
-
-        <div class="p-3 contanir-fluid">
+        <div class="p-3 contanir-fluid text-light">
             <h1 class="text-center text-decoration-underline">Folder</h1>
         </div>
 
         <div class="accordion col-md-6 mx-auto" id="accordionFolder" style="width:88%">
+
+        </div>
+
+        <div class="p-3 contanir-fluid text-light">
+            <h1 class="text-center text-decoration-underline">Files</h1>
+        </div>
+
+        <div class="accordion col-md-6 mx-auto" id="accordionFile" style="width:88%">
 
         </div>
     </div>
@@ -38,31 +90,56 @@
 <script type="text/javascript">
     fetch('/fetch').then(response => response.json()).then(function (data){
         var files = {};
-        var folders = [];
+        var folders = {};
 
-        for (const [key, value] of Object.entries(data)){
+        for (const [key, value] of Object.entries(data[0])){
             if (value[1] === "null"){
                 files[key] = value;
             }
-            else{
-                if (folders.indexOf(value[1]) === -1){
-                    folders.push(value[1]);
-                }
-            }
         }
 
-        var fileWrapper = document.getElementById("accordionFile");
-        var folderWrapper = document.getElementById("accordionFolder");
+        for (const [key, value] of Object.entries(data[1])){
+            folders[key] = value
+        }
 
-        var myFileHTML = '';
+        var folderWrapper = document.getElementById("accordionFolder");
+        var fileWrapper = document.getElementById("accordionFile");
+
         var myFolderHTML = '';
+        var folderMid = '';
+        var myFileHTML = '';
+        var fileMid = '';
 
         flag = 1
+        for (const [keyFolder, valueFolder] of Object.entries(folders)) {
+            if (valueFolder === "saved"){
+                folderMid = '<button type="button" class="btn btn-primary" onclick="location.href = \'/folder?name='+keyFolder+'\'">Open Folder</button>\n' +
+                '           <button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="'+keyFolder+' Delete'+'">Delete Folder</button>\n'
+            }
+            else if (valueFolder === "deleting"){
+                folderMid = '<h2 class="text-center">Deleting Folder</h2>\n';
+            }
+
+            myFolderHTML += '<div class="accordion-item">\n' +
+                '                <h2 class="accordion-header" id="heading'+flag+'">\n' +
+                '                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse'+flag+'" aria-expanded="false" aria-controls="collapse'+flag+'">\n' +
+                '                   <strong>'+keyFolder+'</strong>\n' +
+                '                  </button>\n' +
+                '                </h2>\n' +
+                '                <div id="collapse'+flag+'" class="accordion-collapse collapse" aria-labelledby="heading'+flag+'" data-bs-parent="#accordionFolder">\n' +
+                '                  <div class="accordion-body text-dark">\n' +
+                                       folderMid+
+                '                  </div>\n' +
+                '                </div>\n' +
+                '              </div>\n';
+            flag += 1
+        }
+
         for (const [keyFile, valueFile] of Object.entries(files)) {
             myFileHTML += '<div class="accordion-item">\n' +
                 '                <h2 class="accordion-header" id="heading'+flag+'">\n' +
                 '                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse'+flag+'" aria-expanded="false" aria-controls="collapse'+flag+'">\n' +
-                '                   '+keyFile+' Size:'+valueFile[0]+'\n' +
+                '                   <strong>'+keyFile+' Size: '+valueFile[0]+'</strong>\n' +
                 '                  </button>\n' +
                 '                </h2>\n' +
                 '                <div id="collapse'+flag+'" class="accordion-collapse collapse" aria-labelledby="heading'+flag+'" data-bs-parent="#accordionFile">\n' +
@@ -75,31 +152,46 @@
             flag += 1
         }
 
-        for (const keyFile of folders) {
-            console.log(keyFile)
-            myFolderHTML += '<div class="accordion-item">\n' +
-                '                <h2 class="accordion-header" id="heading'+flag+'">\n' +
-                '                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse'+flag+'" aria-expanded="false" aria-controls="collapse'+flag+'">\n' +
-                '                   '+keyFile+'\n' +
-                '                  </button>\n' +
-                '                </h2>\n' +
-                '                <div id="collapse'+flag+'" class="accordion-collapse collapse" aria-labelledby="heading'+flag+'" data-bs-parent="#accordionFolder">\n' +
-                '                  <div class="accordion-body text-dark">\n' +
-                '                      <button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="'+keyFile+' Open'+'">Open Folder</button>\n' +
-                '                      <button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="'+keyFile+' Delete'+'">Delete Folder</button>\n' +
-                '                  </div>\n' +
-                '                </div>\n' +
-                '              </div>\n';
-            flag += 1
-        }
-
-        fileWrapper.innerHTML = myFileHTML;
         folderWrapper.innerHTML = myFolderHTML;
+        fileWrapper.innerHTML = myFileHTML;
     })
 
+    var fla = 2;
     function clickResponse(btn) {
             alert(btn.value)
         }
+
+    Dropzone.options.dropper = {
+        paramName: 'uptoser',
+        chunking: true,
+        forceChunking: true,
+        url: '/upload',
+        uploadMultiple: false,
+        maxFiles:1,
+        maxFilesize: 20000,
+        chunkSize: 1000000, // bytes
+
+        init: function() {
+              this.on("maxfilesexceeded", function(file) {
+                    this.removeAllFiles();
+                    this.addFile(file);
+              });
+        },
+        init: function () {
+            this.on("complete", function (file) {
+              if (this.getUploadingFiles().length === 0 && this.getQueuedFiles().length === 0) {
+                window.location.replace('/');
+              }
+            });
+          },
+        uploadprogress: function(file, progress, bytesSent) {
+            var formMid = document.getElementById("uploadForm")
+            if (fla%2 === 0){
+                formMid.innerHTML = '<h2 class="text-center">Progress: '+Math.round(progress)+'%</h2>\n';
+            }
+            fla += 1;
+        }
+    }
 </script>
 </body>
 </html>

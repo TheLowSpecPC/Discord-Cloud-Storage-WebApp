@@ -1,5 +1,5 @@
-from  flask import Blueprint, render_template, jsonify, request
-import os, json
+from  flask import Blueprint, render_template, jsonify, request, redirect
+import os, json, threading, time
 
 path_cwd = os.path.dirname(os.path.realpath(__file__))
 path_static = os.path.join(path_cwd, "static")
@@ -11,9 +11,45 @@ Views = Blueprint('views', __name__, static_folder=path_static, template_folder=
 def index():
     return render_template("main.html")
 
+@Views.route("/folder")
+def folder():
+    name = request.args.getlist("name")
+
+    if name != []:
+        return render_template("folder.html")
+    else:
+        return redirect("/")
+
 @Views.route('/fetch')
 def fetch():
     with open(f'{path_cwd}/sample.json', 'r') as openfile:
         dataReply = json.load(openfile)
 
     return jsonify(dataReply)
+
+@Views.route('/upload', methods=['GET','POST'])
+def upload():
+    upFile = request.files.get('uptoser')
+    upFolder = request.args.get('folder')
+    current_chunk = int(request.form['dzchunkindex'])
+    total_chunks = int(request.form['dztotalchunkcount'])
+
+    def back():
+        redirect('/')
+        time.sleep(5)
+        print("Done!!!!!!!!!!!!!")
+
+    if upFile == None or upFile.filename == '':
+        return redirect('/')
+    else:
+        save_path = path_cwd + '/upload/' + upFile.filename
+
+        with open(save_path, 'ab') as f:
+            f.seek(int(request.form['dzchunkbyteoffset']))
+            f.write(upFile.stream.read())
+
+        if current_chunk+1 == total_chunks:
+            t = threading.Thread(target=back)
+            t.start()
+
+        return redirect('/')
