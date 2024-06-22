@@ -34,22 +34,41 @@ def upload():
     current_chunk = int(request.form['dzchunkindex'])
     total_chunks = int(request.form['dztotalchunkcount'])
 
-    def back():
-        redirect('/')
+    def back(fileName, folderName):
         time.sleep(5)
-        print("Done!!!!!!!!!!!!!")
+        print(fileName)
+        print(folderName)
 
     if upFile == None or upFile.filename == '':
         return redirect('/')
+
     else:
-        save_path = path_cwd + '/upload/' + upFile.filename
+        name = upFile.filename
+
+        with open(path_cwd+'/sample.json', 'r') as openfile:
+            json_object = json.load(openfile)
+
+        dictKeys = []
+        for i in json_object[0]:
+            dictKeys.append(i)
+
+        if name in dictKeys:
+            base, extension = os.path.splitext(name)
+            ii = 1
+            while True:
+                name = os.path.join(base + "(" + str(ii) + ")" + extension)
+                if name not in dictKeys:
+                    break
+                ii += 1
+
+        save_path = path_cwd + '/upload/' + name
 
         with open(save_path, 'ab') as f:
             f.seek(int(request.form['dzchunkbyteoffset']))
             f.write(upFile.stream.read())
 
         if current_chunk+1 == total_chunks:
-            t = threading.Thread(target=back)
+            t = threading.Thread(target=back, args=(name,upFolder,))
             t.start()
 
         return redirect('/')
