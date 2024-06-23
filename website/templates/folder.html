@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Meme Website</title>
+    <title>Discord Cloud Storage</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet"
      href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.4.0/min/dropzone.min.css"/>
@@ -68,6 +68,9 @@
 
         for (const [key, value] of Object.entries(data[0])){
             if (value[1] === myParam){
+                if (isNaN(value[0]) === false){
+                    value[0] = (value[0]*20).toString() + ' mb'
+                }
                 folders[key] = value;
             }
         }
@@ -109,10 +112,25 @@
             for (const [keyFolder, valueFolder] of Object.entries(folders)) {
                 var folderMidWrapper = document.getElementById("accordionMidFolder" + keyFolder);
 
-                if (valueFolder[2] === "complete"){
-                    folderMid = '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFolder + ' Download' + '">Download From Discord</button>\n' +
-                                '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFolder + ' Delete' + '">Delete From Discord</button>\n' +
-                                '<button type="button" class="btn btn-primary" onclick="location.href = \'/move?file=' + keyFolder + '\'">Move</button>\n';
+                if (valueFolder[2] === "inDiscord"){
+                    folderMid = '<button type="button" class="btn btn-primary" onclick="location.href = \'/downfromdis?file=' + keyFolder + '\'">Download From Discord</button>\n' +
+                              '<button type="button" class="btn btn-primary" onclick="location.href = \'/delfromdis?file=' + keyFolder + '\'">Delete From Discord</button>\n' +
+                              '<button type="button" class="btn btn-primary" onclick="location.href = \'/move?file=' + keyFolder + '\'">Move</button>\n';
+                }
+                else if (valueFolder[2] === "uptodis"){
+                    folderMid = '<h3 class="text-center">Uploading to Discord<br> '+Math.round(valueFolder[3])+'%</h3>\n';
+                }
+                else if (valueFolder[2] === "downfromdis"){
+                    folderMid = '<h3 class="text-center">Downloading to Server<br> '+Math.round(valueFolder[3])+'%</h3>\n';
+                }
+                else if (valueFolder[2] === "inServer"){
+                    folderMid = '<button type="button" class="btn btn-primary" onclick="location.href = \'/move?file=' + keyFolder + '\'">Move</button>\n' +
+                                '<h3>Downloaded to Server</h3>\n' +
+                                '<button type="button" class="btn btn-primary" onclick="location.href = \'/downfromser?file=' + keyFolder + '\'">Download From Server</button>\n' +
+                                '<button type="button" class="btn btn-primary" onclick="location.href = \'/delfromser?file=' + keyFolder + '\'">Delete From Server</button>\n';
+                }
+                else if (valueFolder[2] === "deleting"){
+                    folderMid = '<h3 class="text-center">Deleting from Discord<br> '+Math.round(valueFolder[3])+'%</h3>\n';
                 }
 
                 folderMidWrapper.innerHTML.trim();

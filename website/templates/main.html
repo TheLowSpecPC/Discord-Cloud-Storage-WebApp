@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>Meme Website</title>
+    <title>Discord Cloud Storage</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
@@ -94,6 +94,9 @@
 
         for (const [key, value] of Object.entries(data[0])) {
             if (value[1] === "null") {
+                if (isNaN(value[0]) === false){
+                    value[0] = (value[0]*20).toString() + ' mb'
+                }
                 files[key] = value;
             }
         }
@@ -165,11 +168,12 @@
             for (const [keyFolder, valueFolder] of Object.entries(folders)) {
                 var folderMidWrapper = document.getElementById("accordionMidFolder" + keyFolder);
 
-                if (valueFolder[0] === "saved") {
+                if (valueFolder === "saved") {
                     folderMid = '<button type="button" class="btn btn-primary" onclick="location.href = \'/folder?name=' + keyFolder + '\'">Open Folder</button>\n' +
-                                '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFolder + ' Delete' + '">Delete Folder</button>\n';
-                } else if (valueFolder[0] === "deleting") {
-                    folderMid = '<h2 class="text-center">Deleting Folder</h2>\n';
+                                '<button type="button" class="btn btn-primary" onclick="location.href = \'/delfolder?folderdel=' + keyFolder + '\'">Delete Folder</button>\n';
+                }
+                else if (valueFolder === "deleting") {
+                    folderMid = '<h3 class="text-center">Deleting Folder</h3>\n';
                 }
 
                 folderMidWrapper.innerHTML.trim();
@@ -179,10 +183,25 @@
             for (const [keyFile, valueFile] of Object.entries(files)) {
                 var fileMidWrapper = document.getElementById("accordionMidFile" + keyFile);
 
-                if (valueFile[2] === "complete"){
-                    fileMid = '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFile + ' Download' + '">Download From Discord</button>\n' +
-                              '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFile + ' Delete' + '">Delete From Discord</button>\n' +
+                if (valueFile[2] === "inDiscord"){
+                    fileMid = '<button type="button" class="btn btn-primary" onclick="location.href = \'/downfromdis?file=' + keyFile + '\'">Download From Discord</button>\n' +
+                              '<button type="button" class="btn btn-primary" onclick="location.href = \'/delfromdis?file=' + keyFile + '\'">Delete From Discord</button>\n' +
                               '<button type="button" class="btn btn-primary" onclick="location.href = \'/move?file=' + keyFile + '\'">Move</button>\n';
+                }
+                else if (valueFile[2] === "uptodis"){
+                    fileMid = '<h3 class="text-center">Uploading to Discord<br> '+Math.round(valueFile[3])+'%</h3>\n';
+                }
+                else if (valueFile[2] === "downfromdis"){
+                    fileMid = '<h3 class="text-center">Downloading to Server<br> '+Math.round(valueFile[3])+'%</h3>\n';
+                }
+                else if (valueFile[2] === "inServer"){
+                    fileMid = '<button type="button" class="btn btn-primary" onclick="location.href = \'/move?file=' + keyFile + '\'">Move</button>\n' +
+                              '<h3>Downloaded to Server</h3>\n' +
+                              '<button type="button" class="btn btn-primary" onclick="location.href = \'/downfromser?file=' + keyFile + '\'">Download From Server</button>\n' +
+                              '<button type="button" class="btn btn-primary" onclick="location.href = \'/delfromser?file=' + keyFile + '\'">Delete From Server</button>\n';
+                }
+                else if (valueFile[2] === "deleting"){
+                    fileMid = '<h3 class="text-center">Deleting from Discord<br> '+Math.round(valueFile[3])+'%</h3>\n';
                 }
 
                 fileMidWrapper.innerHTML.trim();

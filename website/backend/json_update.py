@@ -26,10 +26,11 @@ def fileUptoDis(name, size, folder, status):
     with open(jsonPath, "w") as outfile:
         json.dump(json_object, outfile)
 
-def fileUpdate(name, status, progress):
+def fileUpdate(name, size, status, progress):
     with open(jsonPath, 'r') as openfile:
         json_object = json.load(openfile)
 
+    json_object[0][name][0] = size
     json_object[0][name][2] = status
     json_object[0][name][3] = progress
 
@@ -49,17 +50,16 @@ def folderCreate(name, status):
     with open(jsonPath, 'r') as openfile:
         json_object = json.load(openfile)
 
-    json_object[1].update({name: [status, 0]})
+    json_object[1].update({name: status})
 
     with open(jsonPath, "w") as outfile:
         json.dump(json_object, outfile)
 
-def folderUpdate(name, status, progress):
+def folderUpdate(name, status):
     with open(jsonPath, 'r') as openfile:
         json_object = json.load(openfile)
 
-    json_object[1][name][0] = status
-    json_object[1][name][1] = progress
+    json_object[1][name] = status
 
     with open(jsonPath, "w") as outfile:
         json.dump(json_object, outfile)
