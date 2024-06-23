@@ -1,0 +1,77 @@
+<html>
+<head>
+    <title>Meme Website</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class="p-3 mb-2 bg-dark">
+
+    <div class="d-grid gap-3">
+        <div class="p-0">
+            <nav class="navbar navbar-expand-lg navbar-light bg-secondary rounded">
+              <div class="container-fluid">
+
+                <button type="button" class="btn btn-primary" onclick="location.href = '/'">Cancle</button>
+
+              </div>
+            </nav>
+        </div>
+
+
+
+        <div class="p-3 contanir-fluid text-light">
+            <h1 id="Heading" class="text-center text-decoration-underline"></h1>
+        </div>
+
+        <div class="accordion col-md-6 mx-auto" id="accordionFolder" style="width:88%">
+
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script type="text/javascript">
+    const urlParams = new URLSearchParams(window.location.search);
+    const myParam = urlParams.get('file');
+
+    document.getElementById('Heading').innerHTML = myParam
+
+    fetch('/fetch').then(response => response.json()).then(function (data) {
+        var folders = ['Main Page'];
+        var name = '';
+
+        for (const [key, value] of Object.entries(data[1])) {
+            if (value[0] === 'saved'){
+                folders.push(key);
+            }
+        }
+        console.log(folders)
+
+        var folderWrapper = document.getElementById("accordionFolder");
+
+        var myFolderHTML = '';
+
+        flag = 1
+        for (const key in folders) {
+            if (folders[key] === 'Main Page'){
+                name = 'null'
+            }
+            else {
+                name = folders[key]
+            }
+
+            myFolderHTML += '<div class="accordion-item">\n' +
+                '                <h2 class="accordion-header" id="headingFolder' + flag + '">\n' +
+                '                  <button class="accordion-button collapsed" type="button" onclick="location.href = \'/move?file=' + myParam + '&folder=' + name + '\'">\n' +
+                '                   <strong>' + folders[key] + '</strong>\n' +
+                '                  </button>\n' +
+                '                </h2>\n';
+            flag += 1
+        }
+
+        folderWrapper.innerHTML = myFolderHTML;
+    })
+</script>
+</body>
+</html>

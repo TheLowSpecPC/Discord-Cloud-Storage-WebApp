@@ -52,10 +52,10 @@
                         </button>
                       </div>
                       <div class="modal-body">
-                          <form action="/folder_menue" method="post" enctype="multipart/form-data">
+                          <form action="/folder_create" name="myForm" method="post" onsubmit="return isValid()" enctype="multipart/form-data">
                              <div class="d-grid gap-3 text-dark">
-                                <input type="email" class="form-control" name="crefol" aria-describedby="emailHelp" placeholder="Enter Name">
-                                <input type="submit" class="btn btn-primary" value="Create">
+                                <input class="form-control" name="crefol" aria-describedby="emailHelp" placeholder="Enter Name">
+                                <input id="submit-btn" type="submit" class="btn btn-primary" value="Create">
                              </div>
                           </form>
                       </div>
@@ -167,7 +167,7 @@
 
                 if (valueFolder[0] === "saved") {
                     folderMid = '<button type="button" class="btn btn-primary" onclick="location.href = \'/folder?name=' + keyFolder + '\'">Open Folder</button>\n' +
-                        '           <button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFolder + ' Delete' + '">Delete Folder</button>\n';
+                                '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFolder + ' Delete' + '">Delete Folder</button>\n';
                 } else if (valueFolder[0] === "deleting") {
                     folderMid = '<h2 class="text-center">Deleting Folder</h2>\n';
                 }
@@ -181,7 +181,8 @@
 
                 if (valueFile[2] === "complete"){
                     fileMid = '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFile + ' Download' + '">Download From Discord</button>\n' +
-        '                      <button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFile + ' Delete' + '">Delete From Discord</button>\n';
+                              '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFile + ' Delete' + '">Delete From Discord</button>\n' +
+                              '<button type="button" class="btn btn-primary" onclick="location.href = \'/move?file=' + keyFile + '\'">Move</button>\n';
                 }
 
                 fileMidWrapper.innerHTML.trim();
@@ -193,16 +194,31 @@
     reload()
     window.onload = setInterval(reload, 3000)
 
-    function clickResponse(btn) {
-            alert(btn.value)
-        }
+    document.getElementById('submit-btn').addEventListener('click',
+        function(event) {
+        var x = document.forms["myForm"]["crefol"].value;
+
+        fetch('/fetch').then(response => response.json()).then(function (data){
+            var folders = [];
+
+            for (const [key, value] of Object.entries(data[1])) {
+                folders.push(key);
+            }
+            console.log(folders)
+
+            if (folders.indexOf(x) > -1){
+                alert('This File already Exist');
+                event.preventDefault();
+            }
+        })
+        });
 
     var fla = 2;
     Dropzone.options.dropper = {
         paramName: 'uptoser',
         chunking: true,
         forceChunking: true,
-        url: '/upload',
+        url: '/upload?folder=null',
         uploadMultiple: false,
         maxFiles:1,
         maxFilesize: 20000,

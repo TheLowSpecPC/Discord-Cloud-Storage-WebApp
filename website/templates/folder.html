@@ -111,7 +111,8 @@
 
                 if (valueFolder[2] === "complete"){
                     folderMid = '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFolder + ' Download' + '">Download From Discord</button>\n' +
-        '                      <button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFolder + ' Delete' + '">Delete From Discord</button>\n';
+                                '<button type="button" class="btn btn-primary" onclick="clickResponse(this)" value="' + keyFolder + ' Delete' + '">Delete From Discord</button>\n' +
+                                '<button type="button" class="btn btn-primary" onclick="location.href = \'/move?file=' + keyFolder + '\'">Move</button>\n';
                 }
 
                 folderMidWrapper.innerHTML.trim();
@@ -122,10 +123,6 @@
     }
     reload()
     window.onload = setInterval(reload, 3000)
-
-    function clickResponse(btn) {
-            alert(btn.value)
-        }
 
     var fla = 2;
     Dropzone.options.dropper = {
