@@ -133,6 +133,7 @@ def Delete(fileName, chunks):
                     json_update.fileUpdate(fileName, chunks, 'deleting', flag)
                     a += 1
             else:
+                json_update.fileUpdate(fileName, chunks, 'deleting', 100)
                 break
         json_update.fileDelete(fileName)
 
