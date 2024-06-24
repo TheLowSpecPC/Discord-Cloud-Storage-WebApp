@@ -42,7 +42,7 @@
         var name = '';
 
         for (const [key, value] of Object.entries(data[1])) {
-            if (value[0] === 'saved'){
+            if (value === 'saved'){
                 folders.push(key);
             }
         }
