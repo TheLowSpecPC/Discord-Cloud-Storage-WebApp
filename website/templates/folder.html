@@ -142,7 +142,6 @@
     reload()
     window.onload = setInterval(reload, 3000)
 
-    var fla = 2;
     Dropzone.options.dropper = {
         paramName: 'uptoser',
         chunking: true,
@@ -168,10 +167,9 @@
           },
         uploadprogress: function(file, progress, bytesSent) {
             var formMid = document.getElementById("uploadForm")
-            if (fla%2 === 0){
+            if (progress !== 100){
                 formMid.innerHTML = '<h2 class="text-center">Progress: '+Math.round(progress)+'%</h2>\n';
             }
-            fla += 1;
         }
     }
 </script>
