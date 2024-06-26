@@ -165,12 +165,24 @@
             var folderMid = '';
             var fileMid = '';
 
+            var fl = 0;
             for (const [keyFolder, valueFolder] of Object.entries(folders)) {
                 var folderMidWrapper = document.getElementById("accordionMidFolder" + keyFolder);
 
-                if (valueFolder === "saved") {
+                for (const [keyFile, valueFile] of Object.entries(data[0])) {
+                    if (valueFile[1] === keyFolder) {
+                        if (valueFile[2] !== 'inDiscord' && valueFile[2] !== 'inServer') {
+                            fl +=1
+                        }
+                    }
+                }
+
+                if (valueFolder === "saved" && fl === 0) {
                     folderMid = '<button type="button" class="btn btn-primary" onclick="location.href = \'/folder?name=' + keyFolder + '\'">Open Folder</button>\n' +
                                 '<button type="button" class="btn btn-primary" onclick="location.href = \'/delfolder?folderdel=' + keyFolder + '\'">Delete Folder</button>\n';
+                }
+                else if (valueFolder === "saved" && fl !== 0) {
+                    folderMid = '<button type="button" class="btn btn-primary" onclick="location.href = \'/folder?name=' + keyFolder + '\'">Open Folder</button>\n';
                 }
                 else if (valueFolder === "deleting") {
                     folderMid = '<h3 class="text-center">Deleting Folder</h3>\n';

@@ -72,7 +72,11 @@ def deleteFolder():
 
     def Thread(folderName, json_object):
         for key in json_object[0].keys():
-            if json_object[0][key][1] == folderName:
+            if json_object[0][key][1] == folderName and json_object[0][key][2] == 'inDoscord':
+                call(['python', 'website/backend/dbot.py', 'delete', key, json_object[0][key][0]])
+
+            if json_object[0][key][1] == folderName and json_object[0][key][2] == 'inServer':
+                os.remove(path_cwd + '/backend/download/' + key)
                 call(['python', 'website/backend/dbot.py', 'delete', key, json_object[0][key][0]])
 
         json_update.folderDelete(folderName)
