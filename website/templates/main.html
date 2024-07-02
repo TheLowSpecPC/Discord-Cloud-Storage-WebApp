@@ -88,6 +88,7 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 <script type="text/javascript">
+    var checkElement = [];
     fetch('/fetch').then(response => response.json()).then(function (data) {
         var files = {};
         var folders = {};
@@ -125,6 +126,7 @@
                 '                </div>\n' +
                 '              </div>\n';
             flag += 1
+            checkElement.push("accordionMidFolder"+keyFolder);
         }
 
         flag = 1
@@ -141,6 +143,7 @@
                 '                </div>\n' +
                 '              </div>\n';
             flag += 1
+            checkElement.push("accordionMidFile"+keyFile);
         }
 
         folderWrapper.innerHTML = myFolderHTML;
@@ -151,15 +154,26 @@
         fetch('/fetch').then(response => response.json()).then(function (data){
             var files = {};
             var folders = {};
+            var checkID = [];
 
             for (const [key, value] of Object.entries(data[0])) {
                 if (value[1] === "null") {
                     files[key] = value;
+                    checkID.push("accordionMidFile"+key);
                 }
             }
 
             for (const [key, value] of Object.entries(data[1])) {
                 folders[key] = value;
+                checkID.push("accordionMidFolder"+key);
+            }
+
+            if (checkElement !== []){
+                for (const element of checkElement){
+                    if (!(checkID.includes(element))){
+                        location.reload()
+                    }
+                }
             }
 
             var folderMid = '';
@@ -219,7 +233,6 @@
                 fileMidWrapper.innerHTML.trim();
                 fileMidWrapper.innerHTML = fileMid;
             }
-
         })
     }
     reload()
