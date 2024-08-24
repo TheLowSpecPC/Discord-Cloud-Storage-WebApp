@@ -4,3 +4,4 @@
 *.pyc
 *.tmp
 website/backend/secrets.py
+website/backend/secret.py

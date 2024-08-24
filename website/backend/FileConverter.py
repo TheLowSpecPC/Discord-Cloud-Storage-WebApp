@@ -1,4 +1,4 @@
-import website.backend.file_processing as file_processing
+import file_processing
 import logging
 import shutil
 import os

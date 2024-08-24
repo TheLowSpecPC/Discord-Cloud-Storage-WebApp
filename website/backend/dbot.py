@@ -1,12 +1,12 @@
-import website.backend.FileConverter as FileConverter
-from website.backend.secrets import Your_Token
-import website.backend.json_update as json_update
+import FileConverter
+import secret
+import json_update
 import nextcord, os, shutil
 from nextcord.ext import commands
 from time import sleep
-import sys, re
+import sys
 
-token = Your_Token
+token = secret.Your_Token
 intents = nextcord.Intents.all()
 
 bot = commands.Bot(command_prefix='!',intents=intents)
