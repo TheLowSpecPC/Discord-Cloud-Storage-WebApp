@@ -22,8 +22,8 @@ def split(file,dir):
 
     fsplitter = file_processing.FileProcessor()
 
-    #Set size of each chunk, for example: 25 mb
-    p_size = 20
+    #Set size of each chunk, for example: 10 mb
+    p_size = 10
 
     #File to split and subdir where to save chunks
     from_file = path_cwd + f"\\out\\{file}\\" + file
@@ -49,8 +49,8 @@ def split(file,dir):
 def join(file):
     fjoiner = file_processing.FileProcessor()
 
-    #Set the size-value for reading chunks, for example: 25 mb
-    readsize = 20
+    #Set the size-value for reading chunks, for example: 10 mb
+    readsize = 10
 
     #Set chunks dir and dest filename
     from_dir = path_cwd + f"\\out\\{file}\\"
