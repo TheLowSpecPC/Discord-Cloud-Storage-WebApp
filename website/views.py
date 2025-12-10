@@ -73,11 +73,11 @@ def deleteFolder():
     def Thread(folderName, json_object):
         for key in json_object[0].keys():
             if json_object[0][key][1] == folderName and json_object[0][key][2] == 'inDiscord':
-                call(['python', 'website/backend/dbot.py', 'delete', key, json_object[0][key][0]])
+                call(['python', path_cwd+'/backend/dbot.py', 'delete', key, json_object[0][key][0]])
 
             if json_object[0][key][1] == folderName and json_object[0][key][2] == 'inServer':
                 os.remove(path_cwd + '/backend/download/' + key)
-                call(['python', 'website/backend/dbot.py', 'delete', key, json_object[0][key][0]])
+                call(['python', path_cwd+'/backend/dbot.py', 'delete', key, json_object[0][key][0]])
 
         json_update.folderDelete(folderName)
 
@@ -101,7 +101,7 @@ def upload():
     total_chunks = int(request.form['dztotalchunkcount'])
 
     def Thread(fileName, fileDir):
-        call(['python', 'website/backend/dbot.py', 'send', fileName, fileDir])
+        call(['python', path_cwd+'/backend/dbot.py', 'send', fileName, fileDir])
 
     if upFile == None or upFile.filename == '' or upFolder == []:
         return redirect('/')
@@ -143,7 +143,7 @@ def downFromDis():
     name = request.args.getlist('file')
 
     def Thread(fileName, chunks):
-        call(['python', 'website/backend/dbot.py', 'download', fileName, chunks])
+        call(['python', path_cwd+'/backend/dbot.py', 'download', fileName, chunks])
 
     with open(path_cwd + '/backend/sample.json', 'r') as openfile:
         json_object = json.load(openfile)
@@ -197,7 +197,7 @@ def delFromDis():
     name = request.args.getlist('file')
 
     def Thread(fileName, chunks):
-        call(['python', 'website/backend/dbot.py', 'delete', fileName, chunks])
+        call(['python', path_cwd+'/backend/dbot.py', 'delete', fileName, chunks])
 
     with open(path_cwd + '/backend/sample.json', 'r') as openfile:
         json_object = json.load(openfile)
